@@ -1,0 +1,14 @@
+apiVersion: pfe.rhpds.com/v1
+kind: Gitea
+metadata:
+  name: simple-gitea
+spec:
+  giteaImageTag: latest
+  giteaVolumeSize: 4Gi
+  giteaSsl: true
+  postgresqlVolumeSize: 4Gi
+  giteaDisableRegistration: true
+  giteaAdminUser: opentlc-mgr
+  giteaAdminEmail: opentlc-mgr@redhat.com
+  giteaAdminPassword: ""
+  giteaAdminPasswordLength: 32

@@ -1,0 +1,74 @@
+---
+  - hosts: all
+    tasks:
+
+
+    - name: Create a VirtualMachine
+      redhat.openshift_virtualization.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: default
+        labels:
+          app: test
+        
+        data_volume_templates:
+          - metadata:
+              name: rhel9-jade-dormouse-21
+            spec:
+              sourceRef:
+                kind: DataSource
+                name: rhel9
+                namespace: openshift-virtualization-os-images
+              storage:
+                resources:
+                  requests:
+                    storage: 30Gi
+        run_strategy: RerunOnFailure
+        spec:
+          architecture: amd64
+          domain:
+            cpu:
+              cores: 1
+              sockets: 1
+              threads: 1
+            devices:
+              disks:
+                - disk:
+                    bus: virtio
+                  name: rootdisk
+                - disk:
+                    bus: virtio
+                  name: cloudinitdisk
+              interfaces:
+                - macAddress: '02:09:11:00:00:0b'
+                  masquerade: {}
+                  model: virtio
+                  name: default
+              rng: {}
+            features:
+              acpi: {}
+              smm:
+                enabled: true
+            firmware:
+              bootloader:
+                efi: {}
+            machine:
+              type: pc-q35-rhel9.4.0
+            memory:
+              guest: 3Gi
+            resources: {}
+          networks:
+            - name: default
+              pod: {}
+          terminationGracePeriodSeconds: 180
+          volumes:
+            - dataVolume:
+                name: rhel9-jade-dormouse-21
+              name: rootdisk
+            - cloudInitNoCloud:
+                userData: |-
+                  #cloud-config
+                  user: cloud-user
+                  password: 2v7c-qlsp-bpic
+                  chpasswd: { expire: False }
+              name: cloudinitdisk

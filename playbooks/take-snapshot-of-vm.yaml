@@ -1,0 +1,18 @@
+- hosts: all
+  tasks:
+
+  - name: Create a VM snapshot
+    redhat.openshift.k8s:
+      state: present
+      resource_definition:
+        apiVersion: snapshot.kubevirt.io/v1alpha1
+        kind: VirtualMachineSnapshot
+        metadata:
+          name: testvm-2025-4-9
+          namespace: default
+        spec:
+          source:
+            apiGroup: kubevirt.io
+            kind: VirtualMachine
+            name: testvm
+            namespace: default
